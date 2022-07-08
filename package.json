@@ -11,10 +11,12 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "18",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.1.4",
     "vite": "^2.9.13",
+    "vite-plugin-pwa": "^0.12.2",
     "vite-plugin-solid": "^2.2.6"
   },
   "dependencies": {
