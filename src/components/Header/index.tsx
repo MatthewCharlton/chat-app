@@ -2,7 +2,7 @@ import { lazy, Show } from 'solid-js';
 import { Link } from 'solid-app-router';
 
 import { useChatData } from '../../providers/Supabase';
-import logo from '/murmur.png'
+import logo from '/murmur.png';
 
 const SignOut = lazy(() => import('../Auth/SignOut'));
 

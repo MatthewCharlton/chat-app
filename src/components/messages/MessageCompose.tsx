@@ -32,9 +32,19 @@ function MessageCompose() {
   };
 
   return (
-    <form id="send-message-form" class="bottom-0 sticky flex p-2 bg-white" onSubmit={handleSendMessage}>
-      <textarea class="flex-1 border-2 bg-gray-50 focus:bg-white max-h-32" name="message" id="message"></textarea>
-      <Button class="bg-[#46cbb2] text-black" type="submit">Send</Button>
+    <form
+      id="send-message-form"
+      class="bottom-0 sticky flex p-2 bg-white"
+      onSubmit={handleSendMessage}
+    >
+      <textarea
+        class="flex-1 border-2 bg-gray-50 focus:bg-white max-h-32"
+        name="message"
+        id="message"
+      ></textarea>
+      <Button class="bg-[#46cbb2] text-black" type="submit">
+        Send
+      </Button>
     </form>
   );
 }
