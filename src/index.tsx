@@ -1,10 +1,10 @@
-import { render } from 'solid-js/web';
-import { Router } from 'solid-app-router';
+import { render } from "solid-js/web";
+import { Router } from "solid-app-router";
 
-import './index.css';
+import "./index.css";
 
-import { ChatDataProvider } from './providers/Supabase';
-import App from './App';
+import { ChatDataProvider } from "./providers/Supabase";
+import App from "./App";
 
 render(
   () => (
@@ -14,5 +14,5 @@ render(
       </Router>
     </ChatDataProvider>
   ),
-  document.getElementById('root')!
+  document.getElementById("root")!
 );
