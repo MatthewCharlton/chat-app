@@ -1,21 +1,21 @@
 {
-    "name": "murmur chat",
-    "short_name": "murmur",
-    "start_url": "/murmur/",
-    "description": "Shoot the breeze with mates",
-    "icons": [
-        {
-            "src": "pwa-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "pwa-256x256.png",
-            "sizes": "256x256",
-            "type": "image/png"
-        }
-    ],
-    "theme_color": "#46cbb2",
-    "background_color": "#46cbb2",
-    "display": "standalone"
+  "name": "murmur chat",
+  "short_name": "murmur",
+  "start_url": "/murmur/",
+  "description": "Shoot the breeze with mates",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#46cbb2",
+  "background_color": "#46cbb2",
+  "display": "standalone"
 }

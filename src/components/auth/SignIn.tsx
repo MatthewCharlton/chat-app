@@ -45,7 +45,13 @@ function LoginWithEmail() {
       <div class="p-2">
         <label for="email">
           Email <br />
-          <input class="p-2 border-2 w-full" id="email" type="email" required autocomplete='email' />
+          <input
+            class="p-2 border-2 w-full"
+            id="email"
+            type="email"
+            required
+            autocomplete="email"
+          />
         </label>
       </div>
       <div class="p-2">

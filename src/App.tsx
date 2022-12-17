@@ -1,5 +1,4 @@
 import { lazy, Component, Show, createEffect } from 'solid-js';
-
 import {
   Routes,
   Route,
@@ -7,6 +6,7 @@ import {
   useNavigate,
   useLocation,
 } from 'solid-app-router';
+import { useRegisterSW } from 'virtual:pwa-register/solid';
 
 import { useChatData } from './providers/Supabase';
 
@@ -21,6 +21,21 @@ const SignIn = lazy(() => import('./components/Auth/SignIn'));
 const ResetPassword = lazy(() => import('./components/Auth/ResetPassword'));
 
 const App: Component = () => {
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    offlineReady: [offlineReady, setOfflineReady],
+    updateServiceWorker,
+  } = useRegisterSW({
+    immediate: true,
+    onRegistered(r) {
+      // eslint-disable-next-line no-console
+      console.log(`SW Registered: ${r}`);
+    },
+    onRegisterError(error) {
+      console.error('SW registration error', error);
+    },
+  });
+
   const state = useChatData();
   const navigate = useNavigate();
 
