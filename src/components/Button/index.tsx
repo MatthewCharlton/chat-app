@@ -1,4 +1,6 @@
-const Button = (props) => {
+import { JSX } from "solid-js";
+
+const Button = (props: JSX.IntrinsicAttributes & JSX.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       {...props}

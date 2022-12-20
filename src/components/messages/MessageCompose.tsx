@@ -1,4 +1,4 @@
-import { lazy } from 'solid-js';
+import { lazy, createSignal, onMount } from 'solid-js';
 import { useChatData } from '../../providers/Supabase';
 
 const Button = lazy(() => import('../Button'));
@@ -8,14 +8,27 @@ function MessageCompose() {
 
   const email = state.username();
 
-  state.messages();
+  onMount(() => {
+    const textarea = document.getElementById('message') as HTMLSpanElement;
 
-  const handleSendMessage = async (event: SubmitEvent) => {
+    textarea.addEventListener('keydown', (event: KeyboardEvent) => {
+      console.log(event.shiftKey, event.key);
+
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleSendMessage();
+      }
+    });
+  });
+
+  const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
+    await handleSendMessage();
+  };
 
-    const textarea = event?.target?.[0];
-
-    let text = textarea.value;
+  const handleSendMessage = async () => {
+    const textarea = document.getElementById('message') as HTMLSpanElement;
+    let text = textarea.innerText.trim();
 
     if (!text) return;
 
@@ -27,7 +40,7 @@ function MessageCompose() {
       console.log('error', error);
       return;
     }
-    textarea.value = '';
+    textarea.innerText = '';
     textarea.focus();
   };
 
@@ -35,13 +48,14 @@ function MessageCompose() {
     <form
       id="send-message-form"
       class="bottom-0 sticky flex p-2 bg-white"
-      onSubmit={handleSendMessage}
+      onSubmit={handleSubmit}
     >
-      <textarea
-        class="flex-1 border-2 bg-gray-50 focus:bg-white max-h-32"
-        name="message"
+      <span
+        class="flex-1 border-2 bg-gray-50 focus:bg-white p-2 overflow-hidden resize"
+        role="textbox"
+        contenteditable
         id="message"
-      ></textarea>
+      ></span>
       <Button class="bg-[#46cbb2] text-black" type="submit">
         Send
       </Button>

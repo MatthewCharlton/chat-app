@@ -10,15 +10,17 @@ function LoginWithEmail() {
   const navigate = useNavigate();
 
   const [user, setUser] = createSignal('');
-  const [error, setError] = createSignal();
+  const [error, setError] = createSignal('');
 
   const handleSubmit = (event: SubmitEvent) => {
     event.preventDefault();
-    const email = event.target[0].value;
-    const password = event.target[1].value;
+
+    const email = (document.getElementById('email') as HTMLInputElement)?.value;
+    const password = (document.getElementById('password') as HTMLInputElement)
+      ?.value;
 
     (async () => {
-      const { user, error } = await state.supabase.auth.signIn({
+      const { data, error } = await state.supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -30,11 +32,13 @@ function LoginWithEmail() {
 
       if (error) {
         console.log('error :>> ', error);
-        setError(error);
+        setError(error.message);
         return;
         // setLoginError(error.message);
       }
-      setUser(user);
+      console.log('data', data);
+
+      setUser(data.user?.email || '');
     })();
   };
 
