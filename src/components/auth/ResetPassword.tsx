@@ -16,7 +16,9 @@ function SendPasswordRequest() {
   const handleSubmitPasswordResetRequest = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const email = (document.getElementById('email') as HTMLInputElement)?.value;
+    const email = (
+      document.getElementById('email') as HTMLInputElement
+    )?.value.trim();
 
     if (!email) {
       setNoEmailMessage('Please enter an email');
@@ -36,6 +38,7 @@ function SendPasswordRequest() {
       console.log('data', data);
     }
   };
+
   return (
     <form
       class="mx-auto max-w-sm my-6"

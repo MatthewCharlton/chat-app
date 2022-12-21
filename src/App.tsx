@@ -73,7 +73,7 @@ const App: Component = () => {
             <Show<boolean>
               when={!!state?.username()}
               fallback={<>{navigate('/murmur/sign-in')}</>}
-              >
+            >
               <InstallPWA />
               <div class="flex flex-col col-span-6 lg:col-span-4 lg:col-start-2">
                 <MessageList messages={state.messages()} />

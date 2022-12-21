@@ -6,7 +6,10 @@ function SignOut() {
   const state = useChatData();
   const handleSignOut = async () => {
     const { error } = await state.supabase.auth.signOut();
-    console.log('error signing out', error);
+    if (error) {
+      console.error('Error signing out', error);
+      return;
+    }
     window.location.assign('/murmur/');
   };
   return <Button onClick={handleSignOut}>Sign out</Button>;
