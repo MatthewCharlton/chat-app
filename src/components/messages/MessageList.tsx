@@ -14,7 +14,7 @@ export function Message(props: Message & { lastItem: boolean }) {
 
   const [itemRef, setItemRef] = createSignal<HTMLElement | null>(null);
 
-  const userEmail = useChatData().username
+  const userEmail = useChatData().username;
 
   const isMessageFromUser = userEmail() === email;
 
@@ -28,7 +28,7 @@ export function Message(props: Message & { lastItem: boolean }) {
         itemRef()?.scrollIntoView({
           behavior: 'smooth',
         }),
-      150
+      200
     );
   });
 

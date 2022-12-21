@@ -14,6 +14,7 @@ import {
   SupabaseClient,
 } from '@supabase/supabase-js';
 import { get, set } from 'idb-keyval';
+import { DB_NAME_CHAT_DATA } from '../constants';
 
 type Message = {
   id: string;
@@ -33,7 +34,6 @@ const supabaseKey = import.meta.env.VITE_APP_SUPABASE_KEY as string;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const DB_NAME_CHAT_DATA = 'chat-data';
 const IDB_LAST_SEEN_MESSAGE_KEY = 'last-seen-message';
 
 let mySubscription: RealtimeChannel | null = null;

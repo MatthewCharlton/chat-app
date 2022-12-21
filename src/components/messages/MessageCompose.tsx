@@ -1,4 +1,5 @@
-import { lazy, createSignal, onMount } from 'solid-js';
+import { lazy, onMount } from 'solid-js';
+import { DB_NAME_CHAT_DATA } from '../../constants';
 import { useChatData } from '../../providers/Supabase';
 
 const Button = lazy(() => import('../Button'));
@@ -32,8 +33,8 @@ function MessageCompose() {
 
     if (!text) return;
 
-    const { error } = await state!.supabase
-      .from('chat-data')
+    const { error } = await state.supabase
+      .from(DB_NAME_CHAT_DATA)
       .insert([{ text, email }]);
 
     if (error) {

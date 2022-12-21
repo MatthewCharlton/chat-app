@@ -1,0 +1,1 @@
+export const DB_NAME_CHAT_DATA = 'chat-data';
