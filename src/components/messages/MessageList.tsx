@@ -1,7 +1,7 @@
 import { createSignal, For, lazy, onMount } from 'solid-js';
 
 import hashCode from '../../utils/hash';
-import getUserDataFromLocalStorage from '../../utils/getUserDataFromLocalStorage';
+import { useChatData } from '../../providers/Supabase';
 
 const Avatar = lazy(() => import('../Avatar'));
 
@@ -14,11 +14,9 @@ export function Message(props: Message & { lastItem: boolean }) {
 
   const [itemRef, setItemRef] = createSignal<HTMLElement | null>(null);
 
-  const userData = getUserDataFromLocalStorage();
+  const userEmail = useChatData().username;
 
-  const userEmail = userData?.currentSession?.user?.email;
-
-  const isMessageFromUser = userEmail === email;
+  const isMessageFromUser = userEmail() === email;
 
   const hash = hashCode(email);
 
@@ -30,7 +28,7 @@ export function Message(props: Message & { lastItem: boolean }) {
         itemRef()?.scrollIntoView({
           behavior: 'smooth',
         }),
-      150
+      200
     );
   });
 

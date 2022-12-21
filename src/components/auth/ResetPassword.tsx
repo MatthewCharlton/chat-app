@@ -5,7 +5,7 @@ import Button from '../Button';
 
 import { useChatData } from '../../providers/Supabase';
 
-function Error(props) {
+function Error(props: { message: string }) {
   return <div>{props.message}</div>;
 }
 
@@ -16,7 +16,9 @@ function SendPasswordRequest() {
   const handleSubmitPasswordResetRequest = async (event: SubmitEvent) => {
     event.preventDefault();
 
-    const email = event.target[0].value;
+    const email = (
+      document.getElementById('email') as HTMLInputElement
+    )?.value.trim();
 
     if (!email) {
       setNoEmailMessage('Please enter an email');
@@ -25,8 +27,9 @@ function SendPasswordRequest() {
       setNoEmailMessage('');
     }
 
-    const { data, error } =
-      state.supabase.auth.api.resetPasswordForEmail(email);
+    const { data, error } = await state.supabase.auth.resetPasswordForEmail(
+      email
+    );
 
     if (error) {
       console.log('error', error);
@@ -35,6 +38,7 @@ function SendPasswordRequest() {
       console.log('data', data);
     }
   };
+
   return (
     <form
       class="mx-auto max-w-sm my-6"
@@ -64,8 +68,7 @@ function LoginWithEmail() {
 
   let searchParams = new URLSearchParams(window.location.hash);
 
-  //Iterate the search parameters.
-
+  // Iterate the search parameters
   let accessToken = '';
   for (let p of searchParams) {
     if (p[0].includes('access_token')) {
@@ -77,9 +80,13 @@ function LoginWithEmail() {
 
   const handleUpdatePassword = async (event: SubmitEvent) => {
     event.preventDefault();
-    // console.log('event :>> ', event);
-    const password1 = event.target[0].value;
-    const password2 = event.target[1].value;
+
+    const password1 = (
+      document.getElementById('new-password') as HTMLInputElement
+    )?.value;
+    const password2 = (
+      document.getElementById('reenter-new-password') as HTMLInputElement
+    )?.value;
 
     if (password1 !== password2) {
       setPasswordError('Passwords do not match');
@@ -87,10 +94,9 @@ function LoginWithEmail() {
 
     const invalid = !!passwordError();
     if (!invalid) {
-      const { user, error } = await state.supabase.auth.api.updateUser(
-        accessToken,
-        { password: password1 }
-      );
+      const { data, error } = await state.supabase.auth.updateUser({
+        password: password1,
+      });
 
       if (error) {
         console.log('error :>> ', error);
@@ -116,13 +122,23 @@ function LoginWithEmail() {
           <div class="m-2">
             <label>
               Enter new password
-              <input class="border-2" type="password" required />
+              <input
+                id="new-password"
+                class="border-2"
+                type="password"
+                required
+              />
             </label>
           </div>
           <div class="m-2">
             <label>
               Re-enter new password
-              <input class="border-2" type="password" required />
+              <input
+                id="reenter-new-password"
+                class="border-2"
+                type="password"
+                required
+              />
             </label>
           </div>
           <Button type="submit">Submit</Button>

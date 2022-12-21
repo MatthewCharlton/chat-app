@@ -9,11 +9,12 @@ import {
 } from 'solid-js';
 import {
   createClient,
-  RealtimeSubscription,
+  RealtimeChannel,
   Session,
   SupabaseClient,
 } from '@supabase/supabase-js';
 import { get, set } from 'idb-keyval';
+import { DB_NAME_CHAT_DATA } from '../constants';
 
 type Message = {
   id: string;
@@ -33,10 +34,9 @@ const supabaseKey = import.meta.env.VITE_APP_SUPABASE_KEY as string;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const DB_NAME_CHAT_DATA = 'chat-data';
 const IDB_LAST_SEEN_MESSAGE_KEY = 'last-seen-message';
 
-let mySubscription: RealtimeSubscription | null = null;
+let mySubscription: RealtimeChannel | null = null;
 
 const [username, setUsername] = createSignal('');
 const [routeHash, setRouteHash] = createSignal('/murmur/');
@@ -99,7 +99,7 @@ export const ChatDataProvider: Component<{
         // console.log(`error`, error);
         setError(error.message);
         if (!mySubscription) return;
-        supabase.removeSubscription(mySubscription);
+        supabase.removeChannel(mySubscription);
         mySubscription = null;
         return;
       }
@@ -111,18 +111,14 @@ export const ChatDataProvider: Component<{
 
   const subscribe = () => {
     mySubscription = supabase
-      .from(DB_NAME_CHAT_DATA)
-      .on('*', (payload) => {
-        setMessages((prevMessages) => [...prevMessages, payload.new]);
-        sendMessageToSW('LAST_MESSAGE_ID', [payload.new]);
+      .channel(DB_NAME_CHAT_DATA)
+      .on('postgres_changes', { event: '*', schema: '*' }, (payload) => {
+        const newMessage = payload.new as Message;
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        sendMessageToSW('LAST_MESSAGE_ID', [newMessage]);
       })
       .subscribe();
   };
-
-  const user = supabase.auth.user();
-  const userEmail = user?.email || '';
-
-  setUsername(userEmail);
 
   const setSessionTokenInIDB = (session: Session | null) => {
     if (session) set('session-token', session);
@@ -147,7 +143,7 @@ export const ChatDataProvider: Component<{
   onCleanup(() => {
     window?.removeEventListener('visibilitychange', handleWindowVisible);
     if (!mySubscription) return;
-    supabase.removeSubscription(mySubscription);
+    supabase.removeChannel(mySubscription);
   });
 
   return (

@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, createEffect } from 'solid-js';
 import { Link, useNavigate } from 'solid-app-router';
 
 import Button from '../Button';
@@ -10,38 +10,42 @@ function LoginWithEmail() {
   const navigate = useNavigate();
 
   const [user, setUser] = createSignal('');
-  const [error, setError] = createSignal();
+  const [error, setError] = createSignal('');
 
-  const handleSubmit = (event: SubmitEvent) => {
+  const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
-    const email = event.target[0].value;
-    const password = event.target[1].value;
 
-    (async () => {
-      const { user, error } = await state.supabase.auth.signIn({
-        email,
-        password,
-      });
+    const email = (document.getElementById('email') as HTMLInputElement)?.value;
+    const password = (document.getElementById('password') as HTMLInputElement)
+      ?.value;
 
-      // const { user, error } = await state.supabase.auth.signUp({
-      //   email,
-      //   password,
-      // });
+    const { data, error } = await state.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) {
-        console.log('error :>> ', error);
-        setError(error);
-        return;
-        // setLoginError(error.message);
-      }
-      setUser(user);
-    })();
+    // const { user, error } = await state.supabase.auth.signUp({
+    //   email,
+    //   password,
+    // });
+
+    if (error) {
+      console.log('error :>> ', error);
+      setError(error.message);
+      return;
+    }
+    console.log('data', data);
+
+    setUser(data.user?.email || '');
   };
+
+  createEffect(() => {
+    (user() || state?.username()) && navigate('/murmur/');
+  });
 
   return (
     <form class="mx-auto max-w-sm my-6" onSubmit={handleSubmit}>
       {error() ? <span>{error()}</span> : null}
-      {(user() || state?.username()) && <>{navigate('/murmur/')} </>}
       <div class="p-2">
         <label for="email">
           Email <br />
