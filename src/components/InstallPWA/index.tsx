@@ -11,34 +11,39 @@ const DECLINE_PWA_INSTALL_LOCAL_STORAGE_KEY = 'murmur-pwa-install-decline';
 
 const DECLINE_TIMEOUT = 3 * 60 * 60 * 1000; // 3 hours
 
-// Add push subscription
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.ready.then(async (registration) => {
-    const userEmail = useChatData().username;
+const addPushNotifcations = () => {
+  // Add push subscription
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(async (registration) => {
+      const userEmail = useChatData().username;
 
-    // check push subscription
-    registration.pushManager.getSubscription().then(async (subscription) => {
-      if (subscription) return;
+      // check push subscription
+      registration.pushManager.getSubscription().then(async (subscription) => {
+        if (subscription) return;
 
-      const { data, error } = await supabase.from('push-subs').select();
+        const { data, error } = await supabase.from('push-subs').select();
 
-      if (error || !data || data.length > 0) return;
+        if (error || !data || data.length > 0) return;
 
-      // register push
-      const addSub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        // public vapid key
-        applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+        // register push
+        const addSub = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          // public vapid key
+          applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+        });
+
+        await supabase
+          .from('push-subs')
+          .insert([
+            { subscription: JSON.stringify(addSub), email: userEmail() },
+          ]);
       });
-
-      await supabase
-        .from('push-subs')
-        .insert([{ subscription: JSON.stringify(addSub), email: userEmail() }]);
     });
-  });
-}
+  }
+};
 
 const InstallPWA = () => {
+  addPushNotifcations();
   const [showInstallUI, toggleShowInstallUI] = createSignal(false);
 
   let deferredPrompt: any;
